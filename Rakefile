@@ -35,7 +35,7 @@ end
 
 desc "Start irb #{$gem.name} session"
 task :console do
-  sh "irb -rubygems -I./lib -r ./lib/#{$gem.name}.rb"
+  sh "irb -rubygems -I./lib -r ./lib/#{$gem.name.gsub('-', '/')}.rb"
 end
 
 desc "Install #{$gem.name} gem"
@@ -44,7 +44,7 @@ task :install => :build do
   if !gemfile.nil?
     sh "gem install --no-ri --no-rdoc #{gemfile}"
   else
-    puts 'Cound not find gem.'
+    puts 'Could not find gem.'
   end
 end
 
