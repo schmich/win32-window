@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.version = eval(File.read('lib/win32/window/version.rb'))
   s.date = Time.now.strftime('%Y-%m-%d')
   s.summary = 'Ruby interface to the Win32 window management APIs.'
-  s.description = <<<-END
+  s.description = <<-END
     A Ruby library to work with Microsoft Windows' Win32 window management APIs,
     including search, enumeration, and window manipulation.
   END
