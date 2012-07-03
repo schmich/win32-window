@@ -1,4 +1,4 @@
-win32-window
+## win32-window
 ============
 
-Ruby interface to Win32 window control APIs.
+Ruby interface to the Win32 window management APIs.
