@@ -175,7 +175,7 @@ module Win32
   IsIconic = API.new('IsIconic', 'I', 'I', 'user32')
 
   # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633530(v=vs.85).aspx
-  IsWindowVisible = API.new('IsWindowVisible ', 'I', 'I', 'user32')
+  IsWindowVisible = API.new('IsWindowVisible', 'I', 'I', 'user32')
 
   HWND_BOTTOM = 1
   HWND_NOTTOPMOST = -2
