@@ -39,6 +39,13 @@ module Win32
       return Thread.current[:matches]
     end
 
+    # TODO
+    def self.from_point(*args)
+      # args = (x,y) or Point
+      # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633558(v=vs.85).aspx
+      # WindowFromPoint
+    end
+
     def self.desktop
       Window.new(GetDesktopWindow.call())
     end
@@ -68,21 +75,39 @@ module Win32
     end
 
     def minimize
-      CloseWindow.call(@handle)
+      ShowWindow.call(@handle, SW_MINIMIZE)
     end
 
     def minimized?
       IsIconic.call(@handle) != 0
     end
 
+    def maximize
+      ShowWindow.call(@handle, SW_MAXIMIZE)
+    end
+
+    # TODO: max -> min -> restore does not show the window restored,
+    # you have to do max -> min -> restore -> restore.
+    def restore
+      ShowWindow.call(@handle, SW_RESTORE)
+    end
+
+    def maximized?
+      IsZoomed.call(@handle) != 0
+    end
+
     def visible?
       IsWindowVisible.call(@handle) != 0
     end
 
+    # TODO: hide -> maximize/minimize/restore forces the window
+    # to be shown again, use SetWindowPlacement?
     def hide
+      ShowWindow.call(@handle, SW_HIDE)
     end
 
     def show
+      ShowWindow.call(@handle, SW_SHOW)
     end
 
     def parent
@@ -112,21 +137,27 @@ module Win32
     end
 
     def x
+      location.x
     end
 
     def y
+      location.y
     end
 
     def left
+      geometry.left
     end
 
     def right
+      geometry.right
     end
 
     def top
+      geometry.top
     end
     
     def bottom
+      geometry.bottom
     end
 
     def size
@@ -135,11 +166,15 @@ module Win32
     end
 
     def width
+      size.width
     end
 
     def height
+      size.height
     end
 
+    # TODO: geometry should return special values when
+    # the window is minimized.
     def geometry
       rect = Window.buffer(4 * 4)
       GetWindowRect.call(@handle, rect)
@@ -204,9 +239,6 @@ module Win32
   # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633522(v=vs.85).aspx
   GetWindowThreadProcessId = API.new('GetWindowThreadProcessId', 'IP', 'L', 'user32')
 
-  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms632678(v=vs.85).aspx
-  CloseWindow = API.new('CloseWindow', 'I', 'L', 'user32')
-
   # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633504(v=vs.85).aspx
   GetDesktopWindow = API.new('GetDesktopWindow', '', 'I', 'user32')
 
@@ -219,8 +251,28 @@ module Win32
   # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633527(v=vs.85).aspx
   IsIconic = API.new('IsIconic', 'I', 'I', 'user32')
 
+  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633531(v=vs.85).aspx
+  IsZoomed = API.new('IsZoomed', 'I', 'I', 'user32')
+
   # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633530(v=vs.85).aspx
   IsWindowVisible = API.new('IsWindowVisible', 'I', 'I', 'user32')
+
+  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633548(v=vs.85).aspx
+  ShowWindow = API.new('ShowWindow', 'II', 'I', 'user32')
+
+  SW_FORCEMINIMIZE = 11
+  SW_HIDE = 0
+  SW_MAXIMIZE = 3
+  SW_MINIMIZE = 6
+  SW_RESTORE = 9
+  SW_SHOW = 5
+  SW_SHOWDEFAULT = 10
+  SW_SHOWMAXIMIZED = 3
+  SW_SHOWMINIMIZED = 2
+  SW_SHOWMINNOACTIVE = 7
+  SW_SHOWNA = 8
+  SW_SHOWNOACTIVATE = 4
+  SW_SHOWNORMAL = 1
 
   HWND_BOTTOM = 1
   HWND_NOTTOPMOST = -2
