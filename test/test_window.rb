@@ -58,4 +58,26 @@ class TestWin32Window < Test::Unit::TestCase
     @w.minimize
     assert(@w.minimized?)
   end
+
+  def test_desktop
+    assert_not_equal(nil, Window.desktop)
+  end
+
+  def test_foreground
+    assert_not_equal(nil, Window.foreground)
+    assert_equal(@w, Window.foreground) 
+  end
+
+  def test_equality
+    p = Window.find(:pid => @pid).first
+    q = Window.find(:pid => @pid).first
+    assert(p == q)
+    assert(p.eql? q)
+    assert(!(p != q))
+    p = Window.find(:pid => @pid).first
+    q = Window.find(:title => /\A#{$title}\z/).first
+    assert(p == q)
+    assert(p.eql? q)
+    assert(!(p != q))
+  end
 end
