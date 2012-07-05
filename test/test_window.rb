@@ -26,6 +26,20 @@ class TestWin32Window < Test::Unit::TestCase
     assert(!w.empty?)
   end
 
+  def test_pid
+    w = Window.find(:pid => @pid).first
+    assert_equal(w.pid, @pid)
+  end
+
+  def test_title
+    w = Window.find(:title => /\A#{$title}\z/).first
+    assert_equal(w.title, $title)
+  end
+
+  def test_handle
+    assert_not_equal(0, @w.handle)
+  end
+
   def test_size
   end
 
@@ -40,23 +54,24 @@ class TestWin32Window < Test::Unit::TestCase
     assert_equal(30, loc.y)
   end
 
-  def test_pid
-    w = Window.find(:pid => @pid).first
-    assert_equal(w.pid, @pid)
-  end
-
-  def test_title
-    w = Window.find(:title => /\A#{$title}\z/).first
-    assert_equal(w.title, $title)
-  end
-
   def test_visible
     assert(@w.visible?)
   end
 
   def test_minimize
+    assert(!@w.minimized?)
+    assert(!@w.maximized?)
     @w.minimize
     assert(@w.minimized?)
+    assert(!@w.maximized?)
+  end
+
+  def test_maximize
+    assert(!@w.maximized?)
+    assert(!@w.minimized?)
+    @w.maximize
+    assert(@w.maximized?)
+    assert(!@w.minimized?)
   end
 
   def test_desktop
