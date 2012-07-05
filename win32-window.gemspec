@@ -12,5 +12,5 @@ Gem::Specification.new do |s|
   s.files = Dir['{lib}/**/*.rb', 'bin/*', '*.md']
   s.require_path = 'lib'
   s.homepage = 'https://github.com/schmich/win32-window'
-  s.add_development_dependency 'rake', '>= 0.9.2.2'
+  s.add_runtime_dependency 'win32-api', '>= 1.4.8'
 end
