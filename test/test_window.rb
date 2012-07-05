@@ -1,0 +1,61 @@
+require 'win32/window'
+require 'test/unit'
+require 'win32/semaphore'
+require 'shared'
+
+class TestWin32Window < Test::Unit::TestCase
+  def setup
+    semaphore = Win32::Semaphore.new(0, 1, $semaphore)
+    app = File.join(File.dirname(__FILE__), 'app.rb')
+    @pid = Process.spawn('rubyw.exe', app)
+    semaphore.wait()
+    @w = Window.find(:pid => @pid).first
+  end
+
+  def teardown
+    Process.kill('KILL', @pid)
+  end
+
+  def test_find_title
+    w = Window.find(:title => /\A#{$title}\z/)
+    assert(!w.empty?)
+  end
+
+  def test_find_pid
+    w = Window.find(:pid => @pid)
+    assert(!w.empty?)
+  end
+
+  def test_size
+  end
+
+  def test_move
+    @w.move(10, 20)
+    loc = @w.location
+    assert_equal(10, loc.x)
+    assert_equal(20, loc.y)
+    @w.move(40, 30)
+    loc = @w.location
+    assert_equal(40, loc.x)
+    assert_equal(30, loc.y)
+  end
+
+  def test_pid
+    w = Window.find(:pid => @pid).first
+    assert_equal(w.pid, @pid)
+  end
+
+  def test_title
+    w = Window.find(:title => /\A#{$title}\z/).first
+    assert_equal(w.title, $title)
+  end
+
+  def test_visible
+    assert(@w.visible?)
+  end
+
+  def test_minimize
+    @w.minimize
+    assert(@w.minimized?)
+  end
+end

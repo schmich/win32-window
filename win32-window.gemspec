@@ -13,4 +13,7 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.homepage = 'https://github.com/schmich/win32-window'
   s.add_runtime_dependency 'win32-api', '>= 1.4.8'
+  s.add_development_dependency 'rake', '>= 0.9'
+  s.add_development_dependency 'qtbindings', '>= 4.6'
+  s.add_development_dependency 'win32-semaphore', '>= 0.3'
 end
