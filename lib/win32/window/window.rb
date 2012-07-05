@@ -51,6 +51,18 @@ module Win32
       Window.get_title(@handle)
     end
 
+    def handle
+      @handle
+    end
+
+    def eql?(other)
+      self == other
+    end
+
+    def ==(other)
+      handle == other.handle
+    end
+
     def topmost=(topmost)
       SetWindowPos.call(@handle, topmost ? HWND_TOPMOST : HWND_NOTTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE)
     end
