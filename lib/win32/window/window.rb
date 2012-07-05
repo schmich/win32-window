@@ -17,23 +17,26 @@ module Win32
     end
 
     def self.find(opts = {})
-      matches = []
+      Thread.current[:matches] = []
+      Thread.current[:opts] = opts
 
-      callback = API::Callback.new('LP', 'I') { |handle|
+      @@callback ||= API::Callback.new('LP', 'I') { |handle|
+        opts = Thread.current[:opts]
+
         match = true
         match &&= opts[:title].nil? || (get_title(handle) =~ opts[:title])
         match &&= opts[:pid].nil? || (get_pid(handle) == opts[:pid])
 
         if match
-          matches << Window.new(handle)
+          Thread.current[:matches] << Window.new(handle)
         end
 
         1
       }
 
-      EnumWindows.call(callback, nil)
+      EnumWindows.call(@@callback, nil)
 
-      return matches
+      return Thread.current[:matches]
     end
 
     def self.desktop
@@ -64,6 +67,12 @@ module Win32
       IsWindowVisible.call(@handle) != 0
     end
 
+    def hide
+    end
+
+    def show
+    end
+
     def parent
       parent = GetParent.call(@handle)
       if parent == 0
@@ -90,9 +99,33 @@ module Win32
       Point.new(g.left, g.top)
     end
 
+    def x
+    end
+
+    def y
+    end
+
+    def left
+    end
+
+    def right
+    end
+
+    def top
+    end
+    
+    def bottom
+    end
+
     def size
       g = geometry()
       Size.new(g.right - g.left, g.bottom - g.top)
+    end
+
+    def width
+    end
+
+    def height
     end
 
     def geometry
