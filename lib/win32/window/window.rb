@@ -39,11 +39,22 @@ module Win32
       return Thread.current[:matches]
     end
 
-    # TODO
     def self.from_point(*args)
-      # args = (x,y) or Point
-      # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633558(v=vs.85).aspx
-      # WindowFromPoint
+      if (args.length == 1) && (args[0].is_a? Point)
+        x = args[0].x
+        y = args[0].y
+      elsif args.length == 2
+        x, y = args
+      else
+        raise ArgumentError
+      end
+
+      handle = WindowFromPoint.call(x,y)
+      if handle == 0
+        nil
+      else
+        Window.new(handle)
+      end
     end
 
     def self.desktop
@@ -190,7 +201,7 @@ module Win32
       width = right - left
       height = bottom - top
 
-      point = point(left, top)
+      point = Window.point(left, top)
       ClientToScreen.call(@handle, point)
       screen_left, screen_top = point.unpack('LL')
 
@@ -213,10 +224,10 @@ module Win32
     end
 
     def self.buffer(bytes)
-      ' ' * bytes
+      "\0" * bytes
     end
 
-    def point(x, y)
+    def self.point(x, y)
       [x, y].pack('LL')
     end
   end
@@ -259,6 +270,9 @@ module Win32
 
   # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633548(v=vs.85).aspx
   ShowWindow = API.new('ShowWindow', 'II', 'I', 'user32')
+
+  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633558(v=vs.85).aspx
+  WindowFromPoint = API.new('WindowFromPoint', 'LL', 'I', 'user32')
 
   SW_FORCEMINIMIZE = 11
   SW_HIDE = 0

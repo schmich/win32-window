@@ -58,6 +58,13 @@ class TestWin32Window < Test::Unit::TestCase
     assert(@w.visible?)
   end
 
+  def test_hide_show
+    @w.hide
+    assert(!@w.visible?)
+    @w.show
+    assert(@w.visible?)
+  end
+
   def test_minimize
     assert(!@w.minimized?)
     assert(!@w.maximized?)
@@ -94,5 +101,13 @@ class TestWin32Window < Test::Unit::TestCase
     assert(p == q)
     assert(p.eql? q)
     assert(!(p != q))
+  end
+
+  def test_from_point
+    loc = @w.location
+    p = Window.from_point(loc)
+    assert_equal(p, @w)
+    p = Window.from_point(loc.x, loc.y)
+    assert_equal(p, @w)
   end
 end
