@@ -15,5 +15,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'win32-api', '>= 1.4.8'
   s.add_development_dependency 'rake', '>= 0.9'
   s.add_development_dependency 'qtbindings', '>= 4.6'
-  s.add_development_dependency 'win32-semaphore', '>= 0.3'
+  s.add_development_dependency 'win32-semaphore', '>= 0.4'
 end
