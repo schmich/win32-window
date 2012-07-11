@@ -5,13 +5,13 @@ require_relative 'shared'
 Qt::Application.new(ARGV) do
   Qt::Widget.new do
     self.window_title = $title
-    resize(200, 100)
+    resize(320, 200)
 
     button = Qt::PushButton.new('Quit') do
       connect(SIGNAL :clicked) { Qt::Application.instance.quit }
     end
 
-    label = Qt::Label.new($semaphore)
+    label = Qt::Label.new('win32-window')
 
     self.layout = Qt::VBoxLayout.new do
       add_widget(label, 0, Qt::AlignCenter)
@@ -20,6 +20,7 @@ Qt::Application.new(ARGV) do
 
     def show
       super
+
       begin
         semaphore = Win32::Semaphore.open($semaphore)
         semaphore.release(1)
