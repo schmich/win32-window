@@ -57,12 +57,22 @@ module Win32
       end
     end
 
+    # See also GetShellWindow
+    # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633512(v=vs.85).aspx
     def self.desktop
       Window.new(GetDesktopWindow.call())
     end
 
     def self.foreground
       Window.new(GetForegroundWindow.call())
+    end
+
+    def self.from_handle(handle)
+      if IsWindow.call(handle) != 0
+        Window.new(handle)
+      else
+        nil
+      end
     end
 
     def title
@@ -84,6 +94,32 @@ module Win32
     def topmost=(topmost)
       SetWindowPos.call(@handle, topmost ? HWND_TOPMOST : HWND_NOTTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE)
     end
+
+    # Use also SetForegroundWindow?
+    # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633539(v=vs.85).aspx
+    # def bring_to_top
+    #   BringWindowToTop.call(@handle)
+    # end
+
+    # def activate/focus
+      # ...?
+    # end
+
+    # window.children.from_point(...)
+    # http://msdn.microsoft.com/en-us/library/windows/desktop/ms632677(v=vs.85).aspx
+    # ChildWindowFromPointEx
+
+    # window.children.each/window.each_child
+    # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633494(v=vs.85).aspx
+    # EnumChildWindows
+
+    # window.children.topmost
+    # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633514(v=vs.85).aspx
+    # GetTopWindow
+
+    # window.child_of?
+    # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633524(v=vs.85).aspx
+    # IsChild
 
     def minimize
       ShowWindow.call(@handle, SW_MINIMIZE)
@@ -120,6 +156,11 @@ module Win32
     def show
       ShowWindow.call(@handle, SW_SHOW)
     end
+
+    # window.owner
+    # window.root
+    # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633502(v=vs.85).aspx
+    # GetAncestor
 
     def parent
       parent = GetParent.call(@handle)
@@ -208,6 +249,11 @@ module Win32
       return Rect.new(screen_left, screen_top, screen_left + width, screen_top + height)
     end
 
+    # See GetWindowModuleFileName
+    # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633517(v=vs.85).aspx
+    def module_name
+    end
+
   private
     def self.get_title(handle)
       if GetWindowTextW.call(handle, buffer = "\0" * 1024, buffer.length) == 0
@@ -273,6 +319,12 @@ module Win32
 
   # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633558(v=vs.85).aspx
   WindowFromPoint = API.new('WindowFromPoint', 'LL', 'I', 'user32')
+
+  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms632673(v=vs.85).aspx
+  BringWindowToTop = API.new('BringWindowToTop', 'I', 'I', 'user32')
+
+  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633528(v=vs.85).aspx
+  IsWindow = API.new('IsWindow', 'I', 'I', 'user32')
 
   SW_FORCEMINIMIZE = 11
   SW_HIDE = 0

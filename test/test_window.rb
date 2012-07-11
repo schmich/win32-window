@@ -109,5 +109,20 @@ class TestWin32Window < Test::Unit::TestCase
     assert_equal(p, @w)
     p = Window.from_point(loc.x, loc.y)
     assert_equal(p, @w)
+    p.move(0, 0)
+    q = Window.from_point(0, 0)
+    assert_equal(p, q)
+    p.move(1, 1)
+    q = Window.from_point(0, 0)
+    assert_not_equal(p, q)
   end
+
+  def test_from_handle
+    p = Window.from_handle(INVALID_HANDLE)
+    assert_equal(nil, p)
+    p = Window.from_handle(@w.handle)
+    assert_equal(@w, p)
+  end
+
+  INVALID_HANDLE = -1
 end
