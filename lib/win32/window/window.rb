@@ -11,9 +11,56 @@ module Win32
   class Size < Struct.new(:width, :height)
   end
 
+  module Geometry
+    def location
+      g = geometry()
+      Point.new(g.left, g.top)
+    end
+
+    def x
+      location.x
+    end
+
+    def y
+      location.y
+    end
+
+    def left
+      geometry.left
+    end
+
+    def right
+      geometry.right
+    end
+
+    def top
+      geometry.top
+    end
+    
+    def bottom
+      geometry.bottom
+    end
+
+    def size
+      g = geometry()
+      Size.new(g.right - g.left, g.bottom - g.top)
+    end
+
+    def width
+      size.width
+    end
+
+    def height
+      size.height
+    end
+  end
+
   class Window
     def initialize(handle)
+      # TODO: Validate handle parameter?
+
       @handle = handle
+      @client = Client.new(@handle)
     end
 
     def self.find(opts = {})
@@ -101,9 +148,9 @@ module Win32
     #   BringWindowToTop.call(@handle)
     # end
 
-    # def activate/focus
+    def focus
       # ...?
-    # end
+    end
 
     # window.children.from_point(...)
     # http://msdn.microsoft.com/en-us/library/windows/desktop/ms632677(v=vs.85).aspx
@@ -157,11 +204,6 @@ module Win32
       ShowWindow.call(@handle, SW_SHOW)
     end
 
-    # window.owner
-    # window.root
-    # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633502(v=vs.85).aspx
-    # GetAncestor
-
     def parent
       parent = GetParent.call(@handle)
       if parent == 0
@@ -169,6 +211,17 @@ module Win32
       else
         Window.new(parent)
       end
+    end
+
+    # See GetAncestor
+    # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633502(v=vs.85).aspx
+    def root
+    end
+
+    # See GetAncestor
+    # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633502(v=vs.85).aspx
+    def owner
+      # ...
     end
 
     def pid
@@ -183,47 +236,7 @@ module Win32
       SetWindowPos.call(@handle, 0, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER)
     end
 
-    def location
-      g = geometry()
-      Point.new(g.left, g.top)
-    end
-
-    def x
-      location.x
-    end
-
-    def y
-      location.y
-    end
-
-    def left
-      geometry.left
-    end
-
-    def right
-      geometry.right
-    end
-
-    def top
-      geometry.top
-    end
-    
-    def bottom
-      geometry.bottom
-    end
-
-    def size
-      g = geometry()
-      Size.new(g.right - g.left, g.bottom - g.top)
-    end
-
-    def width
-      size.width
-    end
-
-    def height
-      size.height
-    end
+    include Geometry
 
     # TODO: geometry should return special values when
     # the window is minimized.
@@ -234,19 +247,8 @@ module Win32
       return Rect.new(left, top, right, bottom)
     end
 
-    def client_geometry
-      rect = Window.buffer(4 * 4)
-      GetClientRect.call(@handle, rect)
-      left, top, right, bottom = rect.unpack('LLLL')
-
-      width = right - left
-      height = bottom - top
-
-      point = Window.point(left, top)
-      ClientToScreen.call(@handle, point)
-      screen_left, screen_top = point.unpack('LL')
-
-      return Rect.new(screen_left, screen_top, screen_left + width, screen_top + height)
+    def client
+      @client
     end
 
     # See GetWindowModuleFileName
@@ -255,6 +257,29 @@ module Win32
     end
 
   private
+    class Client
+      def initialize(handle)
+        @handle = handle
+      end
+
+      include Geometry
+
+      def geometry
+        rect = Window.buffer(4 * 4)
+        GetClientRect.call(@handle, rect)
+        left, top, right, bottom = rect.unpack('LLLL')
+
+        width = right - left
+        height = bottom - top
+
+        point = Window.point(left, top)
+        ClientToScreen.call(@handle, point)
+        screen_left, screen_top = point.unpack('LL')
+
+        return Rect.new(screen_left, screen_top, screen_left + width, screen_top + height)
+      end
+    end
+
     def self.get_title(handle)
       if GetWindowTextW.call(handle, buffer = "\0" * 1024, buffer.length) == 0
         nil
