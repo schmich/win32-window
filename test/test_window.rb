@@ -124,5 +124,14 @@ class TestWin32Window < Test::Unit::TestCase
     assert_equal(@w, p)
   end
 
+  def test_client_geometry
+    c = @w.client
+    assert_not_equal(nil, c)
+    g = c.geometry
+    assert_not_equal(nil, g)
+    s = c.size
+    assert_equal(Size.new(320, 200), s)
+  end
+
   INVALID_HANDLE = -1
 end

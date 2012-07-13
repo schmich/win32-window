@@ -6,6 +6,7 @@ Qt::Application.new(ARGV) do
   Qt::Widget.new do
     self.window_title = $title
     resize(320, 200)
+    move(100, 100)
 
     button = Qt::PushButton.new('Quit') do
       connect(SIGNAL :clicked) { Qt::Application.instance.quit }
