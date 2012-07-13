@@ -43,7 +43,7 @@ module Win32
 
     def size
       g = geometry()
-      Size.new(g.right - g.left, g.bottom - g.top)
+      Size.new(g.right - g.left + 1, g.bottom - g.top + 1)
     end
 
     def width
@@ -104,6 +104,14 @@ module Win32
       end
     end
 
+    def self.from_handle(handle)
+      if IsWindow.call(handle) != 0
+        Window.new(handle)
+      else
+        nil
+      end
+    end
+
     # See also GetShellWindow
     # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633512(v=vs.85).aspx
     def self.desktop
@@ -112,14 +120,6 @@ module Win32
 
     def self.foreground
       Window.new(GetForegroundWindow.call())
-    end
-
-    def self.from_handle(handle)
-      if IsWindow.call(handle) != 0
-        Window.new(handle)
-      else
-        nil
-      end
     end
 
     def title
@@ -138,6 +138,9 @@ module Win32
       handle == other.handle
     end
 
+    def topmost?
+    end
+
     def topmost=(topmost)
       SetWindowPos.call(@handle, topmost ? HWND_TOPMOST : HWND_NOTTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE)
     end
@@ -150,6 +153,9 @@ module Win32
 
     def focus
       # ...?
+    end
+
+    def focused?
     end
 
     # window.children.from_point(...)
@@ -269,14 +275,25 @@ module Win32
         GetClientRect.call(@handle, rect)
         left, top, right, bottom = rect.unpack('LLLL')
 
-        width = right - left
-        height = bottom - top
+        # From GetClientRect documentation: "In conformance with conventions for
+        # the RECT structure, the bottom-right coordinates of the returned rectangle
+        # are exclusive. In other words, the pixel at (right, bottom) lies immediately
+        # outside the rectangle."
+        # Because of this, we decrement to determine the inclusive coordinate.
+        right -= 1
+        bottom -= 1
 
-        point = Window.point(left, top)
-        ClientToScreen.call(@handle, point)
-        screen_left, screen_top = point.unpack('LL')
+        width = right - left + 1
+        height = bottom - top + 1
 
-        return Rect.new(screen_left, screen_top, screen_left + width, screen_top + height)
+        top_left = Window.point(left, top)
+        ClientToScreen.call(@handle, top_left)
+        screen_left, screen_top = top_left.unpack('LL')
+
+        screen_right = screen_left + width - 1
+        screen_bottom = screen_top + height - 1
+
+        return Rect.new(screen_left, screen_top, screen_right, screen_bottom)
       end
     end
 
