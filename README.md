@@ -14,46 +14,93 @@ Ruby interface to the Win32 window management APIs.
 
 ### Finding a window
 
-By handle:
+*By handle.* If the handle does not refer to a window, `nil` is returned.
 
 ```ruby
 w = Window.from_handle(h)
 ```
 
-By screen coordinate:
+*By screen coordinates.* Returns the top-level window covering the specified coordinates.
 ```ruby
 w = Window.from_point(x, y)
 
-# Alternatively
+# Alternatively:
 p = Point.new(x, y)
 w = Window.from_point(p)
 ```
 
-By window title:
+*By window title.* Returns all top-level windows whose title matches the specified regex. This can return multiple windows.
 ```ruby
-w = Window.find(:title => /notepad$/i)
+w = Window.find(:title => /calculator/i)
+
+# Get just the first result.
+w = Window.find(:title => /Google Chrome$/).first
 ```
 
-By process ID:
+*By process ID.* Returns all top-level windows owned by the specified process ID. This can return multiple windows.
 ```ruby
 w = Window.find(:pid => 4242)
 ```
 
-The desktop window:
+*By custom filter.* Returns all top-level windows for which the block holds true. This can return multiple windows.
+```ruby
+w = Window.find { |pid, title|
+  (pid > 1000) && (title.end_with? 'Notepad')
+}
+```
+
+*The desktop window.* Note that the geometry of this window corresponds to the primary monitor only.
 ```ruby
 w = Window.desktop
 ```
 
-The foreground window:
+*The foreground window.* This is the window with which the user is currently working.
 ```ruby
 w = Window.foreground
 ```
 
 #### Navigating the window hierarchy
 
-#### Window properties
+`w.parent`
 
-#### Manipulating a window
+`w.child_of?`
+
+#### Basic properties
+
+`w.handle`
+
+`w.title`
+
+`w.pid`
+
+#### Geometry
+
+`w.size` ...
+
+`w.client.size` ...
+
+`w.resize(...)`
+
+`w.move(...)`
+
+#### Display
+
+`w.minimized?`, `w.minimize`
+
+`w.maximized?`, `w.maximize`
+
+`w.foreground?`, `w.foregroundize`
+
+`w.restore`
+
+`w.visible?`, `w.hide`, `w.show`
+
+`w.topmost?`, `w.topmost=`
+
+#### Style
+
+...
+
 
 ## Contributing
 ============
