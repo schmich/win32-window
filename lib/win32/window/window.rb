@@ -57,7 +57,7 @@ end
 
 class Win32::Window
   def initialize(handle)
-    if (handle == INVALID_HANDLE_VALUE) || !IsWindow.call(handle)
+    if !Window.valid_handle?(handle)
       raise ArgumentError, 'Invalid handle.'
     end
 
@@ -107,7 +107,7 @@ class Win32::Window
   end
 
   def self.from_handle(handle)
-    if IsWindow.call(handle) != 0
+    if Window.valid_handle?(handle)
       Window.new(handle)
     else
       nil
@@ -188,14 +188,14 @@ class Win32::Window
     ShowWindow.call(@handle, SW_MAXIMIZE)
   end
 
+  def maximized?
+    IsZoomed.call(@handle) != 0
+  end
+
   # TODO: max -> min -> restore does not show the window restored,
   # you have to do max -> min -> restore -> restore.
   def restore
     ShowWindow.call(@handle, SW_RESTORE)
-  end
-
-  def maximized?
-    IsZoomed.call(@handle) != 0
   end
 
   def visible?
@@ -319,5 +319,9 @@ private
 
   def self.point(x, y)
     [x, y].pack('LL')
+  end
+
+  def self.valid_handle?(handle)
+    (handle != INVALID_HANDLE_VALUE) && (IsWindow.call(handle))
   end
 end
