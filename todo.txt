@@ -1,4 +1,5 @@
 - Support multiple desktops with Window.desktop
+- Window#find with block should also include window handle
 - Add interface for querying for (extended) window styles
   - See http://msdn.microsoft.com/en-us/library/windows/desktop/ff700543(v=vs.85).aspx
   - See http://msdn.microsoft.com/en-us/library/windows/desktop/ms633584(v=vs.85).aspx

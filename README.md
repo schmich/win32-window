@@ -60,3 +60,6 @@ w = Window.foreground
 
 ## License
 ============
+Copyright &copy; 2013 Chris Schmich
+<br />
+MIT License, see LICENSE for details.
