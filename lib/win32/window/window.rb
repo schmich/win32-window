@@ -122,6 +122,7 @@ class Win32::Window
 
   # See also GetShellWindow
   # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633512(v=vs.85).aspx
+  # Support multiple desktop windows.
   def self.desktop
     Window.new(GetDesktopWindow.call())
   end
@@ -147,6 +148,8 @@ class Win32::Window
   end
 
   def topmost?
+    style = GetWindowLong.call(handle, GWL_EXSTYLE)
+    (style & WS_EX_TOPMOST) != 0
   end
 
   def topmost=(topmost)

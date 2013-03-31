@@ -54,6 +54,12 @@ module Win32::Platform
   # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633528(v=vs.85).aspx
   IsWindow = API.new('IsWindow', 'I', 'I', 'user32')
 
+  # http://msdn.microsoft.com/en-us/library/ms633514(VS.85).aspx
+  GetTopWindow = API.new('GetTopWindow', 'I', 'I', 'user32')
+
+  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633584(v=vs.85).aspx
+  GetWindowLong = API.new('GetWindowLong', 'II', 'L', 'user32')
+
   INVALID_HANDLE_VALUE = -1
 
   SW_FORCEMINIMIZE = 11
@@ -78,4 +84,8 @@ module Win32::Platform
   SWP_NOSIZE = 0x0001
   SWP_NOZORDER = 0x0004
   SWP_NOMOVE = 0x0002
+
+  WS_EX_TOPMOST = 0x00000008
+
+  GWL_EXSTYLE = -20
 end

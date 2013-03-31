@@ -152,5 +152,13 @@ class TestWin32Window < Test::Unit::TestCase
     assert_equal(@w, p)
   end
 
+  def test_topmost
+    assert(!@w.topmost?)
+    @w.topmost = true
+    assert(@w.topmost?)
+    @w.topmost = false
+    assert(!@w.topmost?)
+  end
+
   INVALID_HANDLE_VALUE = -1
 end
