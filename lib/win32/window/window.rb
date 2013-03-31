@@ -57,7 +57,9 @@ end
 
 class Win32::Window
   def initialize(handle)
-    # TODO: Validate handle parameter?
+    if (handle == INVALID_HANDLE_VALUE) || !IsWindow.call(handle)
+      raise ArgumentError, 'Invalid handle.'
+    end
 
     @handle = handle
     @client = Client.new(@handle)

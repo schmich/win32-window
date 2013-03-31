@@ -54,6 +54,8 @@ module Win32::Platform
   # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633528(v=vs.85).aspx
   IsWindow = API.new('IsWindow', 'I', 'I', 'user32')
 
+  INVALID_HANDLE_VALUE = -1
+
   SW_FORCEMINIMIZE = 11
   SW_HIDE = 0
   SW_MAXIMIZE = 3

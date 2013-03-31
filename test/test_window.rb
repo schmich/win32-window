@@ -82,11 +82,11 @@ class TestWin32Window < Test::Unit::TestCase
   end
 
   def test_desktop
-    assert_not_equal(nil, Window.desktop)
+    assert_not_nil(Window.desktop)
   end
 
   def test_foreground
-    assert_not_equal(nil, Window.foreground)
+    assert_not_nil(Window.foreground)
     assert_equal(@w, Window.foreground) 
   end
 
@@ -118,20 +118,31 @@ class TestWin32Window < Test::Unit::TestCase
   end
 
   def test_from_handle
-    p = Window.from_handle(INVALID_HANDLE)
-    assert_equal(nil, p)
+    p = Window.from_handle(INVALID_HANDLE_VALUE)
+    assert_nil(p)
     p = Window.from_handle(@w.handle)
     assert_equal(@w, p)
   end
 
   def test_client_geometry
     c = @w.client
-    assert_not_equal(nil, c)
+    assert_not_nil(c)
     g = c.geometry
-    assert_not_equal(nil, g)
+    assert_not_nil(g)
     s = c.size
     assert_equal(Size.new(320, 200), s)
   end
 
-  INVALID_HANDLE = -1
+  def test_invalid_handle
+    assert_raise(ArgumentError) {
+      w = Window.new(INVALID_HANDLE_VALUE) 
+    }
+  end
+
+  def test_new_window
+    p = Window.new(@w.handle)
+    assert_equal(@w, p)
+  end
+
+  INVALID_HANDLE_VALUE = -1
 end
