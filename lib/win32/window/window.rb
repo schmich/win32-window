@@ -1,7 +1,5 @@
 require 'win32/api'
 
-include Win32::Platform
-
 class Win32::Rect < Struct.new(:left, :top, :right, :bottom)
 end
 
@@ -12,6 +10,8 @@ class Win32::Size < Struct.new(:width, :height)
 end
 
 module Win32::Geometry
+  include Win32
+  
   def location
     g = geometry()
     Point.new(g.left, g.top)
@@ -56,6 +56,9 @@ module Win32::Geometry
 end
 
 class Win32::Window
+  include Win32::Platform
+  include Win32::Geometry
+
   def initialize(handle)
     if !Window.valid_handle?(handle)
       raise ArgumentError, 'Invalid handle.'
@@ -223,8 +226,6 @@ class Win32::Window
     SetWindowPos.call(@handle, 0, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER)
   end
 
-  include Geometry
-
   # TODO: geometry should return special values when
   # the window is minimized.
   def geometry
@@ -241,11 +242,12 @@ class Win32::Window
 
 private
   class Client
+    include Win32::Platform
+    include Win32::Geometry
+
     def initialize(handle)
       @handle = handle
     end
-
-    include Geometry
 
     def geometry
       rect = Window.buffer(4 * 4)

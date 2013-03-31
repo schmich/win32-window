@@ -1,11 +1,4 @@
 - Support multiple desktops with Window.desktop
-- Add Window#bring_to_top
-  Use also SetForegroundWindow?
-  http://msdn.microsoft.com/en-us/library/windows/desktop/ms633539(v=vs.85).aspx
-  def bring_to_top
-    BringWindowToTop.call(@handle)
-  end
-- Add Window#focus, Window#focused?
 - Add interface for querying for (extended) window styles
   - See http://msdn.microsoft.com/en-us/library/windows/desktop/ff700543(v=vs.85).aspx
   - See http://msdn.microsoft.com/en-us/library/windows/desktop/ms633584(v=vs.85).aspx
@@ -29,15 +22,6 @@
   # window.child_of?
   # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633524(v=vs.85).aspx
   # IsChild
-- Add interface for getting root (??)
-  # See GetAncestor
-  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633502(v=vs.85).aspx
-- Add interface for getting owner window (how is this different from parent?)
-  # See GetAncestor
-  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633502(v=vs.85).aspx
-  def owner
-    # ...
-  end
 - Add interface for getting module (maybe...)
   # See GetWindowModuleFileName
   # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633517(v=vs.85).aspx
@@ -45,3 +29,10 @@
   end
 - Add interface to flash window
   - See http://msdn.microsoft.com/en-us/library/ms679347(v=vs.85).aspx
+- Add Window#bring_to_top
+  Use also SetForegroundWindow?
+  http://msdn.microsoft.com/en-us/library/windows/desktop/ms633539(v=vs.85).aspx
+  def bring_to_top
+    BringWindowToTop.call(@handle)
+  end
+- Add Window#focus, Window#focused? (is this already done w/ foreground?)

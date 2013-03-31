@@ -1,8 +1,8 @@
 require 'win32/api'
 
-include Win32
-
 module Win32::Platform
+  include Win32
+  
   # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633497(v=vs.85).aspx
   EnumWindows = API.new('EnumWindows', 'KP', 'L', 'user32')
 

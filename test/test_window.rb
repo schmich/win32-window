@@ -4,6 +4,8 @@ require 'win32/semaphore'
 require 'shared'
 
 class TestWin32Window < Test::Unit::TestCase
+  include Win32
+  
   def setup
     semaphore = Win32::Semaphore.new(0, 1, $semaphore)
     app = File.join(File.dirname(__FILE__), 'app.rb')
