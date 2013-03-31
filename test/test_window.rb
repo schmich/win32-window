@@ -26,6 +26,14 @@ class TestWin32Window < Test::Unit::TestCase
     assert(!w.empty?)
   end
 
+  def test_find_with_block
+    w = Window.find { |title, pid|
+      title.include?($title) && (pid == @pid)
+    }
+
+    assert(!w.empty?)
+  end
+
   def test_pid
     w = Window.find(:pid => @pid).first
     assert_equal(w.pid, @pid)

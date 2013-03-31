@@ -69,17 +69,23 @@ class Win32::Window
     Thread.current[:matches] = []
     Thread.current[:opts] = opts
 
+    # Enumerate through all windows and accumulate the matches.
     @@callback ||= API::Callback.new('LP', 'I') { |handle|
       opts = Thread.current[:opts]
 
       match = true
-      match &&= opts[:title].nil? || (get_title(handle) =~ opts[:title])
-      match &&= opts[:pid].nil? || (get_pid(handle) == opts[:pid])
+      if block_given?
+        match &&= yield get_pid(handle), get_title(handle)
+      else
+        match &&= opts[:title].nil? || (get_title(handle) =~ opts[:title])
+        match &&= opts[:pid].nil? || (get_pid(handle) == opts[:pid])
+      end
 
       if match
         Thread.current[:matches] << Window.new(handle)
       end
 
+      # Return 1 to continue the enumeration.
       1
     }
 
