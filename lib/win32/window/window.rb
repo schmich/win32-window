@@ -143,11 +143,11 @@ class Win32::Window
   end
 
   def ==(other)
-    handle == other.handle
+    @handle == other.handle
   end
 
   def topmost?
-    style = GetWindowLong.call(handle, GWL_EXSTYLE)
+    style = GetWindowLong.call(@handle, GWL_EXSTYLE)
     (style & WS_EX_TOPMOST) != 0
   end
 
@@ -193,10 +193,10 @@ class Win32::Window
 
   def parent
     parent = GetParent.call(@handle)
-    if parent == 0
-      nil
-    else
+    if Window.valid_handle?(parent)
       Window.new(parent)
+    else
+      nil
     end
   end
 
