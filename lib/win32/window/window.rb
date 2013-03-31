@@ -185,9 +185,11 @@ class Win32::Window
     IsZoomed.call(@handle) != 0
   end
 
-  # TODO: max -> min -> restore does not show the window restored,
-  # you have to do max -> min -> restore -> restore.
   def restore
+    if minimized?
+      OpenIcon.call(@handle)
+    end
+
     ShowWindow.call(@handle, SW_RESTORE)
   end
 

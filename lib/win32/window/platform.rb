@@ -63,6 +63,9 @@ module Win32::Platform
   # http://msdn.microsoft.com/en-us/library/ms633539(v=vs.85).aspx
   SetForegroundWindow = API.new('SetForegroundWindow', 'I', 'I', 'user32')
 
+  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633535(v=vs.85).aspx
+  OpenIcon = API.new('OpenIcon', 'I', 'I', 'user32')
+
   INVALID_HANDLE_VALUE = -1
 
   SW_FORCEMINIMIZE = 11

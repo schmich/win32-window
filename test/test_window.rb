@@ -167,5 +167,17 @@ class TestWin32Window < Test::Unit::TestCase
     assert(!@w.topmost?)
   end
 
+  def test_max_min_restore
+    assert(!@w.minimized?)
+    assert(!@w.maximized?)
+    @w.maximize
+    assert(@w.maximized?)
+    @w.minimize
+    assert(@w.minimized?)
+    @w.restore
+    assert(!@w.minimized?)
+    assert(!@w.maximized?)
+  end
+
   INVALID_HANDLE_VALUE = -1
 end
