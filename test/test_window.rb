@@ -94,8 +94,13 @@ class TestWin32Window < Test::Unit::TestCase
   end
 
   def test_foreground
-    assert_not_nil(Window.foreground)
     assert_equal(@w, Window.foreground) 
+    assert(@w.foreground?)
+    @w.foregroundize
+
+    # Should still be foreground window.
+    assert_equal(@w, Window.foreground) 
+    assert(@w.foreground?)
   end
 
   def test_equality

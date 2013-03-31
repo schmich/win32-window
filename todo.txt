@@ -38,3 +38,10 @@
   def owner
     # ...
   end
+- Add interface for getting module (maybe...)
+  # See GetWindowModuleFileName
+  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633517(v=vs.85).aspx
+  def module_name
+  end
+- Add interface to flash window
+  - See http://msdn.microsoft.com/en-us/library/ms679347(v=vs.85).aspx

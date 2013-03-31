@@ -123,11 +123,11 @@ class Win32::Window
   # See also GetShellWindow
   # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633512(v=vs.85).aspx
   def self.desktop
-    Window.new(GetDesktopWindow.call())
+    Window.new(GetDesktopWindow.call)
   end
 
   def self.foreground
-    Window.new(GetForegroundWindow.call())
+    Window.new(GetForegroundWindow.call)
   end
 
   def title
@@ -153,6 +153,17 @@ class Win32::Window
 
   def topmost=(topmost)
     SetWindowPos.call(@handle, topmost ? HWND_TOPMOST : HWND_NOTTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE)
+  end
+
+  def foreground?
+    GetForegroundWindow.call == @handle
+  end
+
+  # Won't necessarily succeed.
+  # See MSDN docs for restrictions.
+  # Returns true if it worked, false otherwise.
+  def foregroundize
+    SetForegroundWindow.call(@handle) != 0
   end
 
   def minimize
@@ -228,11 +239,6 @@ class Win32::Window
     @client
   end
 
-  # See GetWindowModuleFileName
-  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633517(v=vs.85).aspx
-  def module_name
-  end
-
 private
   class Client
     def initialize(handle)
@@ -250,7 +256,7 @@ private
       # the RECT structure, the bottom-right coordinates of the returned rectangle
       # are exclusive. In other words, the pixel at (right, bottom) lies immediately
       # outside the rectangle."
-      # Because of this, we decrement to determine the inclusive coordinate.
+      # Because of this, we decrement to determine the inclusive coordinates.
       right -= 1
       bottom -= 1
 
