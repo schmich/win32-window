@@ -99,10 +99,10 @@ class Win32::Window
     end
 
     handle = WindowFromPoint.call(x,y)
-    if handle == 0
-      nil
-    else
+    if Window.valid_handle?(handle)
       Window.new(handle)
+    else
+      nil
     end
   end
 
@@ -251,6 +251,7 @@ class Win32::Window
   def geometry
     rect = Window.buffer(4 * 4)
     GetWindowRect.call(@handle, rect)
+    
     left, top, right, bottom = rect.unpack('LLLL')
     return Rect.new(left, top, right, bottom)
   end
@@ -322,6 +323,6 @@ private
   end
 
   def self.valid_handle?(handle)
-    (handle != INVALID_HANDLE_VALUE) && (IsWindow.call(handle))
+    (handle != 0) && (handle != INVALID_HANDLE_VALUE) && (IsWindow.call(handle))
   end
 end
