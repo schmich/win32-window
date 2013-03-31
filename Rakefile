@@ -34,7 +34,7 @@ Rake::TestTask.new do |t|
 end
 
 desc "Start irb #{$gem.name} session"
-task :console do
+task :irb do
   sh "irb -rubygems -I./lib -r ./lib/#{$gem.name.gsub('-', '/')}.rb"
 end
 
