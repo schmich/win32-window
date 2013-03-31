@@ -122,7 +122,6 @@ class Win32::Window
 
   # See also GetShellWindow
   # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633512(v=vs.85).aspx
-  # Support multiple desktop windows.
   def self.desktop
     Window.new(GetDesktopWindow.call())
   end
@@ -155,35 +154,6 @@ class Win32::Window
   def topmost=(topmost)
     SetWindowPos.call(@handle, topmost ? HWND_TOPMOST : HWND_NOTTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE)
   end
-
-  # Use also SetForegroundWindow?
-  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633539(v=vs.85).aspx
-  # def bring_to_top
-  #   BringWindowToTop.call(@handle)
-  # end
-
-  def focus
-    # ...?
-  end
-
-  def focused?
-  end
-
-  # window.children.from_point(...)
-  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms632677(v=vs.85).aspx
-  # ChildWindowFromPointEx
-
-  # window.children.each/window.each_child
-  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633494(v=vs.85).aspx
-  # EnumChildWindows
-
-  # window.children.topmost
-  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633514(v=vs.85).aspx
-  # GetTopWindow
-
-  # window.child_of?
-  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633524(v=vs.85).aspx
-  # IsChild
 
   def minimize
     ShowWindow.call(@handle, SW_MINIMIZE)
@@ -228,17 +198,6 @@ class Win32::Window
     else
       Window.new(parent)
     end
-  end
-
-  # See GetAncestor
-  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633502(v=vs.85).aspx
-  def root
-  end
-
-  # See GetAncestor
-  # http://msdn.microsoft.com/en-us/library/windows/desktop/ms633502(v=vs.85).aspx
-  def owner
-    # ...
   end
 
   def pid
