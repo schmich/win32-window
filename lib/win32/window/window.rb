@@ -233,8 +233,16 @@ class Win32::Window
   def geometry
     rect = Window.buffer(4 * 4)
     GetWindowRect.call(@handle, rect)
-    
     left, top, right, bottom = rect.unpack('LLLL')
+
+    # From GetWindowRect documentation: "In conformance with conventions for
+    # the RECT structure, the bottom-right coordinates of the returned rectangle
+    # are exclusive. In other words, the pixel at (right, bottom) lies immediately
+    # outside the rectangle." Because of this, we decrement to determine the
+    # inclusive coordinates.
+    right -= 1
+    bottom -= 1
+    
     return Rect.new(left, top, right, bottom)
   end
 
@@ -259,8 +267,8 @@ private
       # From GetClientRect documentation: "In conformance with conventions for
       # the RECT structure, the bottom-right coordinates of the returned rectangle
       # are exclusive. In other words, the pixel at (right, bottom) lies immediately
-      # outside the rectangle."
-      # Because of this, we decrement to determine the inclusive coordinates.
+      # outside the rectangle." Because of this, we decrement to determine the
+      # inclusive coordinates.
       right -= 1
       bottom -= 1
 

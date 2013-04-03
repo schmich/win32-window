@@ -148,6 +148,12 @@ class TestWin32Window < Test::Unit::TestCase
     assert_equal(Size.new(320, 200), s)
   end
 
+  def test_width_height
+    c = @w.client
+    assert(c.width <= @w.width)
+    assert(c.height <= @w.height)
+  end
+
   def test_invalid_handle
     assert_raise(ArgumentError) {
       w = Window.new(INVALID_HANDLE_VALUE) 
