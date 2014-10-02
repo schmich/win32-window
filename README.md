@@ -2,15 +2,14 @@
 Ruby interface to the Win32 window management APIs.
 
 ## Getting Started
-============
-`gem install win32-window`
+
+`gem install win32-window --pre`
 <br />
 `require 'win32/window'`
 <br />
 `include Win32` (optional)
 
 ## API
-============
 
 ### Finding a window
 
@@ -97,16 +96,8 @@ w = Window.foreground
 
 `w.topmost?`, `w.topmost=`
 
-#### Style
-
-...
-
-
-## Contributing
-============
-
 ## License
-============
+
 Copyright &copy; 2013 Chris Schmich
 <br />
-MIT License, see LICENSE for details.
+MIT License. See [LICENSE](LICENSE) for details.
